@@ -1,9 +1,14 @@
+const nr = require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
 const app = express()
 
-const apiKey = '*****************';
+// API key for open weather in the New Relic Home directory.
+// export as environment variable to avoid checking into git. 
+// TODO: Make a proper .env file. 
+//const apiKey = '*****************';
+const apiKey = process.env.openWeatherAPIkey;
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -32,6 +37,7 @@ app.post('/', function (req, res) {
   });
 })
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
+app.set('port', process.env.PORT || 3000);
+app.listen(app.get('port'), function () {
+  console.log('Simple Weather App listening on port '+ app.get('port'))
 })
