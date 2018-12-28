@@ -34,6 +34,7 @@ app.post('/', function (req, res) {
       let weather = JSON.parse(body);
       res.app.get('nr').incrementMetric(numberOfWeatherAPICallsKey);
       res.app.get('nr').incrementMetric('Custom/Weather/Temp',weather.temp);
+      res.app.get('nr').incrementMetric('Custom/'+ weather.name + '/Temp', weather.temp);
       if(weather.main == undefined){
         res.render('index', {weather: null, error: 'Error, please try again'});
       } else {
