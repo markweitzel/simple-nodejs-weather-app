@@ -33,11 +33,11 @@ app.post('/', function (req, res) {
     } else {
       let weather = JSON.parse(body);
       res.app.get('nr').incrementMetric(numberOfWeatherAPICallsKey);
-      res.app.get('nr').incrementMetric('Custom/Weather/Temp',weather.main.temp);
-      res.app.get('nr').incrementMetric('Custom/'+ weather.name + '/Temp', weather.main.temp);
       if(weather.main == undefined){
         res.render('index', {weather: null, error: 'Error, please try again'});
       } else {
+        res.app.get('nr').incrementMetric('Custom/Weather/Temp', weather.main.temp);
+        res.app.get('nr').incrementMetric('Custom/'+ weather.name + '/Temp', weather.main.temp);
         let weatherText = `It's ${weather.main.temp} degrees in ${weather.name}!`;
         res.render('index', {weather: weatherText, error: null});
       }
