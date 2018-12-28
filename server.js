@@ -1,8 +1,9 @@
-const nr = require('newrelic');
+const newrelic = require('newrelic');
 const express = require('express');
+const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const request = require('request');
-const app = express()
+const app = express();
 
 // API key for open weather in the New Relic Home directory.
 // export as environment variable to avoid checking into git. 
