@@ -4,7 +4,7 @@ const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const request = require('request');
 const app = express();
-const numberOfWeatherAPICallsKey = 'Custom/WeatherAPI/Calls'
+const numberOfWeatherAPICallsKey = 'Custom/WeatherAPI/Calls';
 
 // API key for open weather in the New Relic Home directory.
 // export as environment variable to avoid checking into git. 
@@ -32,6 +32,7 @@ app.post('/', function (req, res) {
       res.render('index', {weather: null, error: 'Error, please try again'});
     } else {
       res.app.get('nr').incrementMetric(numberOfWeatherAPICallsKey);
+      res.app.get('nr').incrementMetric('Custom/Weather/Temp',weather.temp);
       let weather = JSON.parse(body)
       if(weather.main == undefined){
         res.render('index', {weather: null, error: 'Error, please try again'});
