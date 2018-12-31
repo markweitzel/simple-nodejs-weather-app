@@ -34,10 +34,32 @@ app.post('/', function (req, res) {
       let weather = JSON.parse(body);
       res.app.get('nr').incrementMetric(numberOfWeatherAPICallsKey);
       if(weather.main == undefined){
+        res.app.get('nr').addCustomAttributes({
+          "Error Code": weather.cod,
+          "Message": weather.message
+        });
         res.render('index', {weather: null, error: 'Error, please try again'});
       } else {
-        res.app.get('nr').incrementMetric('Custom/Weather/Temp', weather.main.temp);
-        res.app.get('nr').incrementMetric('Custom/'+ weather.name + '/Temp', weather.main.temp);
+        let weatherEventDetail = {
+          "lon": weather.coord.lon,
+          "lat": weather.coord.lat,
+          "visibility":weather.visibility,
+          "temp": weather.main.temp,
+          "temp_max": weather.main.temp_max,
+          "temp_min": weather.main.temp_min,
+          "pressure": weather.main.pressure,
+          "humidity": weather.main.humidity,
+          "cityName": weather.name,
+          "cityId": weather.id,
+          "windSpeed": weather.wind.speed,
+          "windDirection": weather.wind.deg,
+          "weatherCondition": weather.weather[0].id,
+          "weatherConditionCategoy": weather.weather[0].main,
+          "weatherConditionDetail": weather.weather[0].description,
+        };
+        res.app.get('nr').recordCustomEvent("WeatherEventDetail", weatherEventDetail);
+        res.app.get('nr').recordMetric('Custom/Weather/Temp', weather.main.temp);
+        res.app.get('nr').recordMetric('Custom/'+ weather.name + '/Temp', weather.main.temp);
         let weatherText = `It's ${weather.main.temp} degrees in ${weather.name}!`;
         res.render('index', {weather: weatherText, error: null});
       }
